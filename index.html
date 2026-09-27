@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Квитанция к ПКО 6.9 x 13.8 см</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background-color: #f1f5f9;
+      color: #0f172a;
+      min-height: 100vh;
+      padding: 16px;
+    }
+
+    .app-wrapper {
+      max-width: 1040px;
+      margin: 0 auto;
+    }
+
+    .app-title-bar {
+      background: #ffffff;
+      padding: 12px 18px;
+      border-radius: 10px;
+      margin-bottom: 18px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .app-title-bar h1 {
+      font-size: 17px;
+      font-weight: 700;
+      color: #1e293b;
+    }
+
+    .badge-size {
+      font-size: 11px;
+      font-weight: 600;
+      background: #e2e8f0;
+      color: #475569;
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+
+    .main-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    @media (min-width: 860px) {
+      .main-grid {
+        flex-direction: row;
+        align-items: flex-start;
+      }
+    }
+
+    /* Форма ввода данных */
+    .form-panel {
+      flex: 1;
+      background: #ffffff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+
+    .form-panel h2 {
+      font-size: 15px;
+      color: #1e293b;
+      margin-bottom: 14px;
+      border-bottom: 1px solid #f1f5f9;
+      padding-bottom: 8px;
+    }
+
+    .input-row {
+      margin-bottom: 11px;
+    }
+
+    .input-row label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: #475569;
+      margin-bottom: 3px;
+    }
+
+    .input-row input,
+    .input-row textarea {
+      width: 100%;
+      padding: 8px 10px;
+      font-size: 13.5px;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      background: #f8fafc;
+      font-family: inherit;
+      color: #0f172a;
+    }
+
+    .input-row input:focus,
+    .input-row textarea:focus {
+      outline: none;
+      border-color: #2563eb;
+      background: #ffffff;
+      box-shadow: 0 0 0 2px rgba(37,99,235,0.15);
+    }
+
+    .two-cols {
+      display: flex;
+      gap: 10px;
+    }
+
+    .two-cols .input-row {
+      flex: 1;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .action-btn {
+      flex: 1;
+      padding: 12px 14px;
+      font-size: 13.5px;
+      font-weight: 600;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .btn-download {
+      background: #2563eb;
+      color: #ffffff;
+    }
+    .btn-download:hover { background: #1d4ed8; }
+
+    .btn-print {
+      background: #0f172a;
+      color: #ffffff;
+    }
+    .btn-print:hover { background: #334155; }
+
+    /* Область отображения бланка */
+    .preview-panel {
+      flex: 0 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+    }
+
+    @media (min-width: 860px) {
+      .preview-panel {
+        width: 360px;
+        position: sticky;
+        top: 16px;
+      }
+    }
+
+    .preview-header {
+      font-size: 12px;
+      font-weight: 600;
+      color: #64748b;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      width: 100%;
+    }
+
+    .preview-viewport {
+      width: 100%;
+      background: #94a3b8;
+      padding: 16px;
+      border-radius: 12px;
+      display: flex;
+      justify-content: center;
+      overflow-x: auto;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    /* =========================================================
+       ТОЧНЫЙ БЛАНК КВИТАНЦИИ ПКО: 69 мм х 138 мм
+       ========================================================= */
+    #receipt-target {
+      width: 69mm;
+      min-width: 69mm;
+      max-width: 69mm;
+      height: 138mm;
+      min-height: 138mm;
+      max-height: 138mm;
+      background: #ffffff;
+      color: #000000;
+      position: relative;
+      display: flex;
+      flex-direction: row;
+      box-sizing: border-box;
+      overflow: hidden;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+      font-family: Arial, "Helvetica Neue", sans-serif;
+      padding: 3.5mm 3.5mm 2.5mm 1mm;
+    }
+
+    /* ЛИНИЯ ОТРЕЗА: как в оригинале, вертикальная пунктирная линия с повернутыми буквами */
+    .cut-line-wrapper {
+      width: 4mm;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      margin-right: 2mm;
+      user-select: none;
+    }
+
+    .cut-dashed-top,
+    .cut-dashed-bottom {
+      flex: 1;
+      width: 1px;
+      border-left: 1px dashed #000000;
+    }
+
+    .cut-text-vertical {
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      font-size: 7px;
+      letter-spacing: 2px;
+      white-space: nowrap;
+      color: #000000;
+      padding: 1.5mm 0;
+      line-height: 1;
+      font-weight: 500;
+    }
+
+    /* Содержимое бланка справа */
+    .receipt-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      height: 100%;
+    }
+
+    .org-box {
+      text-align: center;
+    }
+
+    .org-title {
+      font-size: 8.5px;
+      font-weight: bold;
+      line-height: 1.15;
+      border-bottom: 1.2px solid #000000;
+      padding-bottom: 1px;
+      display: block;
+    }
+
+    .sub-hint {
+      font-size: 6.8px;
+      text-align: center;
+      display: block;
+      margin-top: 0.5px;
+    }
+
+    .doc-main-title {
+      text-align: center;
+      font-size: 11.5px;
+      font-weight: bold;
+      letter-spacing: 0.6px;
+      margin: 2.5mm 0 1mm 0;
+    }
+
+    .order-num-row {
+      text-align: center;
+      font-size: 8.5px;
+      border-bottom: 1.2px solid #000000;
+      padding-bottom: 0.8px;
+      font-weight: bold;
+    }
+
+    .order-date-row {
+      text-align: center;
+      font-size: 8.5px;
+      border-bottom: 1.2px solid #000000;
+      padding-bottom: 0.8px;
+      font-weight: bold;
+      margin-top: 1.8mm;
+      display: block;
+    }
+
+    .field-row {
+      margin-top: 2.2mm;
+    }
+
+    .field-row-label {
+      font-size: 8px;
+      line-height: 1;
+      display: block;
+    }
+
+    .field-row-val {
+      font-size: 8.5px;
+      font-weight: bold;
+      margin-top: 0.5mm;
+      line-height: 1.15;
+      word-break: break-word;
+    }
+
+    .sum-container {
+      margin-top: 2.5mm;
+    }
+
+    .sum-top-line {
+      display: flex;
+      align-items: flex-end;
+      gap: 1.5mm;
+    }
+
+    .sum-top-line .field-row-label {
+      font-size: 8px;
+    }
+
+    .sum-border-digits {
+      flex: 1;
+      text-align: center;
+      border-bottom: 1.2px solid #000000;
+      padding-bottom: 0.5px;
+    }
+
+    .sum-digits-val {
+      font-size: 9.5px;
+      font-weight: bold;
+    }
+
+    .sum-words-val {
+      font-size: 7.6px;
+      margin-top: 1mm;
+      line-height: 1.15;
+    }
+
+    .vat-container {
+      margin-top: 2.5mm;
+      font-size: 8px;
+      line-height: 1.2;
+    }
+
+    /* Подписи и внешние картинки печати/подписи */
+    .signatures-container {
+      position: relative;
+      margin-top: auto;
+      padding-bottom: 1mm;
+    }
+
+    .mp-title {
+      font-weight: bold;
+      font-size: 8.5px;
+      margin-bottom: 2mm;
+    }
+
+    .sign-row-item {
+      margin-bottom: 2mm;
+    }
+
+    .sign-role-title {
+      font-weight: bold;
+      font-size: 8.2px;
+      margin-bottom: 0.8mm;
+    }
+
+    .sign-lines-flex {
+      display: flex;
+      gap: 2mm;
+    }
+
+    .sign-line-left {
+      width: 42%;
+      border-bottom: 1.2px solid #000000;
+      height: 3.5mm;
+    }
+
+    .sign-line-right {
+      width: 58%;
+      border-bottom: 1.2px solid #000000;
+      font-weight: bold;
+      font-size: 8px;
+      text-align: center;
+      min-height: 3.5mm;
+      line-height: 3.5mm;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .sign-sub-captions {
+      display: flex;
+      gap: 2mm;
+      font-size: 6.5px;
+      color: #222;
+      text-align: center;
+      margin-top: 0.5mm;
+    }
+
+    /* ВНЕШНЯЯ КАРТИНКА ПЕЧАТИ (pechat.png / pechat.jpg) */
+    .receipt-stamp {
+      position: absolute;
+      bottom: -1mm;
+      right: -3mm;
+      width: 42mm;
+      height: 42mm;
+      pointer-events: none;
+      mix-blend-mode: multiply;
+      opacity: 0.96;
+      z-index: 10;
+    }
+
+    /* ВНЕШНЯЯ КАРТИНКА ПОДПИСИ (podpis.png / podpis.jpg) */
+    .receipt-sign {
+      position: absolute;
+      bottom: 7.5mm;
+      left: 0.5mm;
+      width: 18mm;
+      height: auto;
+      max-height: 10mm;
+      pointer-events: none;
+      mix-blend-mode: multiply;
+      z-index: 11;
+    }
+
+    /* =========================================================
+       ПЕЧАТЬ НА ПРИНТЕРЕ А4: 69 мм х 138 мм С ЛЕВОГО КРАЯ
+       ========================================================= */
+    @media print {
+      @page {
+        size: A4 portrait;
+        margin: 0; /* Полностью скрывает дату сверху и ссылку снизу листа */
+      }
+      html, body {
+        width: 210mm !important;
+        height: 297mm !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: #ffffff !important;
+      }
+      .app-title-bar,
+      .form-panel,
+      .preview-header,
+      .action-buttons {
+        display: none !important;
+      }
+      .main-grid {
+        display: block !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+      .preview-panel {
+        width: auto !important;
+        position: static !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        display: block !important;
+      }
+      .preview-viewport {
+        padding: 0 !important;
+        background: transparent !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        display: block !important;
+      }
+      #receipt-target {
+        box-shadow: none !important;
+        margin: 5mm 0 0 5mm !important; /* Прижата к верхнему левому краю листа */
+        width: 69mm !important;
+        min-width: 69mm !important;
+        max-width: 69mm !important;
+        height: 138mm !important;
+        min-height: 138mm !important;
+        max-height: 138mm !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-wrapper">
+  
+  <header class="app-title-bar">
+    <h1>Генератор квитанций к ПКО</h1>
+    <div class="badge-size">Размер 6.9 × 13.8 см</div>
+  </header>
+
+  <div class="main-grid">
+    
+    <!-- ЛЕВАЯ КОЛОНКА: ФОРМА ВВОДА -->
+    <div class="form-panel">
+      <h2>Данные квитанции</h2>
+
+      <div class="input-row">
+        <label>Организация</label>
+        <input type="text" id="in-org" value='Общество с ограниченной ответственностью "ЗАБТЕНТ"' oninput="syncToReceipt()">
+      </div>
+
+      <div class="two-cols">
+        <div class="input-row">
+          <label>Номер ордера №</label>
+          <input type="text" id="in-num" value="11" oninput="syncToReceipt()">
+        </div>
+        <div class="input-row">
+          <label>Дата</label>
+          <input type="date" id="in-date" oninput="syncDateToReceipt()">
+        </div>
+      </div>
+
+      <div class="input-row">
+        <label>Принято от</label>
+        <input type="text" id="in-from" value="Частное лицо" oninput="syncToReceipt()">
+      </div>
+
+      <div class="input-row">
+        <label>Основание</label>
+        <textarea id="in-reason" rows="2" oninput="syncToReceipt()">Ремонт тента, заплатки.</textarea>
+      </div>
+
+      <div class="input-row">
+        <label>Сумма платежа (число для авторасчета)</label>
+        <input type="number" step="0.01" id="in-calc-amount" value="3500" placeholder="3500" oninput="calculateAmountWords()">
+      </div>
+
+      <div class="two-cols">
+        <div class="input-row">
+          <label>Сумма цифрами</label>
+          <input type="text" id="in-digits-display" value="3 500 руб. 00 коп." oninput="syncManualInputs()">
+        </div>
+      </div>
+
+      <div class="input-row">
+        <label>Сумма прописью</label>
+        <input type="text" id="in-words-display" value="Три тысячи пятьсот рублей 00 копеек" oninput="syncManualInputs()">
+      </div>
+
+      <div class="input-row">
+        <label>В том числе</label>
+        <input type="text" id="in-vat" value="НДС (Без НДС) 0-00 руб." oninput="syncToReceipt()">
+      </div>
+
+      <div class="two-cols">
+        <div class="input-row">
+          <label>Главный бухгалтер</label>
+          <input type="text" id="in-accountant" value="Дудникова А. И." oninput="syncToReceipt()">
+        </div>
+        <div class="input-row">
+          <label>Кассир</label>
+          <input type="text" id="in-cashier" value="" placeholder="ФИО кассира" oninput="syncToReceipt()">
+        </div>
+      </div>
+
+      <div class="action-buttons">
+        <button class="action-btn btn-print" onclick="window.print()">
+          Распечатать (6.9 × 13.8 см)
+        </button>
+        <button class="action-btn btn-download" onclick="saveAsPNG()">
+          Скачать PNG
+        </button>
+      </div>
+    </div>
+
+    <!-- ПРАВАЯ КОЛОНКА: ПРЕДПРОСМОТР КВИТАНЦИИ (6.9 × 13.8 см) -->
+    <div class="preview-panel">
+      <div class="preview-header">Предпросмотр:</div>
+
+      <div class="preview-viewport">
+        <div id="receipt-target">
+          
+          <!-- Вертикальная пунктирная линия отреза с надписью вдоль неё -->
+          <div class="cut-line-wrapper">
+            <div class="cut-dashed-top"></div>
+            <div class="cut-text-vertical">л и н и я &nbsp; о т р е з а</div>
+            <div class="cut-dashed-bottom"></div>
+          </div>
+
+          <!-- Основное тело квитанции -->
+          <div class="receipt-body">
+            
+            <div class="org-box">
+              <span class="org-title" id="out-org">Общество с ограниченной ответственностью "ЗАБТЕНТ"</span>
+              <span class="sub-hint">организация</span>
+            </div>
+
+            <div class="doc-main-title">КВИТАНЦИЯ</div>
+            <div class="order-num-row">к приходному кассовому ордеру № <span id="out-num">11</span></div>
+            <div class="order-date-row">от <span id="out-date">21 сентября 2026 г.</span></div>
+
+            <div class="field-row">
+              <span class="field-row-label">Принято от</span>
+              <div class="field-row-val" id="out-from">Частное лицо</div>
+            </div>
+
+            <div class="field-row">
+              <span class="field-row-label">Основание</span>
+              <div class="field-row-val" id="out-reason">Ремонт тента, заплатки.</div>
+            </div>
+
+            <div class="sum-container">
+              <div class="sum-top-line">
+                <span class="field-row-label">Сумма</span>
+                <div class="sum-border-digits">
+                  <span class="sum-digits-val" id="out-digits">3 500 руб. 00 коп.</span>
+                  <span class="sub-hint">цифрами</span>
+                </div>
+              </div>
+              <div class="sum-words-val" id="out-words">Три тысячи пятьсот рублей 00 копеек</div>
+            </div>
+
+            <div class="vat-container">
+              <div>В том числе</div>
+              <div id="out-vat">НДС (Без НДС) 0-00 руб.</div>
+            </div>
+
+            <!-- Блок подписей и наложение внешних файлов pechat и podpis -->
+            <div class="signatures-container">
+              <div class="mp-title">М.П. (штампа)</div>
+
+              <div class="sign-row-item">
+                <div class="sign-role-title">Главный бухгалтер</div>
+                <div class="sign-lines-flex">
+                  <div class="sign-line-left"></div>
+                  <div class="sign-line-right" id="out-accountant">Дудникова А. И.</div>
+                </div>
+                <div class="sign-sub-captions">
+                  <div style="width: 42%;">подпись</div>
+                  <div style="width: 58%;">расшифровка подписи</div>
+                </div>
+              </div>
+
+              <div class="sign-row-item" style="margin-bottom: 0;">
+                <div class="sign-role-title">Кассир</div>
+                <div class="sign-lines-flex">
+                  <div class="sign-line-left"></div>
+                  <div class="sign-line-right" id="out-cashier"></div>
+                </div>
+                <div class="sign-sub-captions">
+                  <div style="width: 42%;">подпись</div>
+                  <div style="width: 58%;">расшифровка подписи</div>
+                </div>
+              </div>
+
+              <!-- ВНЕШНЯЯ КАРТИНКА ПЕЧАТИ: подгружается pechat.png или pechat.jpg из папки -->
+              <img src="pechat.png" 
+                   onerror="if(this.src.indexOf('pechat.jpg') === -1) this.src='pechat.jpg';" 
+                   class="receipt-stamp" 
+                   alt="Печать">
+
+              <!-- ВНЕШНЯЯ КАРТИНКА ПОДПИСИ: подгружается podpis.png или podpis.jpg из папки -->
+              <img src="podpis.png" 
+                   onerror="if(this.src.indexOf('podpis.jpg') === -1) this.src='podpis.jpg';" 
+                   class="receipt-sign" 
+                   alt="Подпись">
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  function cleanImageBlackBg(img) {
+    if (!img || img.dataset.cleaned) return;
+
+    function process() {
+      if (img.dataset.cleaned) return;
+      try {
+        const canvas = document.createElement('canvas');
+        const w = img.naturalWidth || img.width;
+        const h = img.naturalHeight || img.height;
+        if (!w || !h) return;
+
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0);
+
+        const imgData = ctx.getImageData(0, 0, w, h);
+        const d = imgData.data;
+
+        let minX = w, minY = h, maxX = 0, maxY = 0;
+        let foundStamp = false;
+
+        for (let y = 0; y < h; y++) {
+          for (let x = 0; x < w; x++) {
+            const i = (y * w + x) * 4;
+            // Если пиксель черный или очень темный (стираем только фон, синяя печать остается)
+            if (d[i] < 55 && d[i + 1] < 55 && d[i + 2] < 55) {
+              d[i + 3] = 0;
+            } else {
+              foundStamp = true;
+              if (x < minX) minX = x;
+              if (x > maxX) maxX = x;
+              if (y < minY) minY = y;
+              if (y > maxY) maxY = y;
+            }
+          }
+        }
+
+        ctx.putImageData(imgData, 0, 0);
+
+        // Центрируем печать в идеальный квадрат 1:1, чтобы она не растягивалась в овал при выгрузке в PNG
+        if (foundStamp && maxX > minX && maxY > minY) {
+          const stampW = maxX - minX;
+          const stampH = maxY - minY;
+          const stampSize = Math.max(stampW, stampH);
+          const pad = 4;
+          const squareSize = stampSize + pad * 2;
+
+          const squareCanvas = document.createElement('canvas');
+          squareCanvas.width = squareSize;
+          squareCanvas.height = squareSize;
+          const sCtx = squareCanvas.getContext('2d');
+
+          const destX = pad + Math.floor((stampSize - stampW) / 2);
+          const destY = pad + Math.floor((stampSize - stampH) / 2);
+
+          sCtx.drawImage(canvas, minX, minY, stampW, stampH, destX, destY, stampW, stampH);
+
+          img.dataset.cleaned = 'true';
+          img.src = squareCanvas.toDataURL('image/png');
+        } else {
+          img.dataset.cleaned = 'true';
+          img.src = canvas.toDataURL('image/png');
+        }
+      } catch (err) {
+        console.warn('Не удалось обработать фон печати:', err);
+      }
+    }
+
+    if (img.complete && (img.naturalWidth > 0 || img.width > 0)) {
+      process();
+    } else {
+      img.addEventListener('load', process, { once: true });
+    }
+  }
+
+  function processSignature(img) {
+    if (!img || img.dataset.cleaned) return;
+
+    function process() {
+      if (img.dataset.cleaned) return;
+      try {
+        const canvas = document.createElement('canvas');
+        const w = img.naturalWidth || img.width;
+        const h = img.naturalHeight || img.height;
+        if (!w || !h) return;
+
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0);
+
+        const imgData = ctx.getImageData(0, 0, w, h);
+        const d = imgData.data;
+
+        // Определяем цвет фона подписи по углам (белый или темный)
+        const cornerIdxs = [0, (w - 1) * 4, (w * (h - 1)) * 4, (w * h - 1) * 4];
+        let darkCorners = 0;
+        let lightCorners = 0;
+
+        cornerIdxs.forEach(idx => {
+          const brightness = (d[idx] + d[idx + 1] + d[idx + 2]) / 3;
+          if (brightness < 60) darkCorners++;
+          if (brightness > 190) lightCorners++;
+        });
+
+        const isDarkBg = darkCorners >= 2;
+        const isLightBg = lightCorners >= 2;
+
+        let minX = w, minY = h, maxX = 0, maxY = 0;
+        let hasInk = false;
+
+        for (let y = 0; y < h; y++) {
+          for (let x = 0; x < w; x++) {
+            const i = (y * w + x) * 4;
+            const r = d[i], g = d[i + 1], b = d[i + 2], a = d[i + 3];
+
+            if (a < 20) continue;
+
+            if (isDarkBg) {
+              // Если фон черный, а росчерк светлый:
+              if (r < 60 && g < 60 && b < 60) {
+                d[i + 3] = 0; // стираем фон
+              } else {
+                // Саму подпись красим в глубокие черные чернила
+                d[i] = 15;
+                d[i + 1] = 23;
+                d[i + 2] = 42;
+                hasInk = true;
+                if (x < minX) minX = x;
+                if (x > maxX) maxX = x;
+                if (y < minY) minY = y;
+                if (y > maxY) maxY = y;
+              }
+            } else if (isLightBg) {
+              // Если фон белый (как в podpis.PNG), а росчерк черный:
+              if (r > 205 && g > 205 && b > 205) {
+                d[i + 3] = 0; // стираем белый фон
+              } else {
+                hasInk = true;
+                if (x < minX) minX = x;
+                if (x > maxX) maxX = x;
+                if (y < minY) minY = y;
+                if (y > maxY) maxY = y;
+              }
+            }
+          }
+        }
+
+        ctx.putImageData(imgData, 0, 0);
+
+        // Авто-обрезка пустых полей: если подпись была маленькой в центре огромного листа
+        if (hasInk && maxX > minX && maxY > minY) {
+          const pad = 4;
+          const cropX = Math.max(0, minX - pad);
+          const cropY = Math.max(0, minY - pad);
+          const cropW = Math.min(w - cropX, (maxX - minX) + pad * 2);
+          const cropH = Math.min(h - cropY, (maxY - minY) + pad * 2);
+
+          const cropCanvas = document.createElement('canvas');
+          cropCanvas.width = cropW;
+          cropCanvas.height = cropH;
+          const cropCtx = cropCanvas.getContext('2d');
+          cropCtx.drawImage(canvas, cropX, cropY, cropW, cropH, 0, 0, cropW, cropH);
+
+          img.dataset.cleaned = 'true';
+          img.src = cropCanvas.toDataURL('image/png');
+        } else {
+          img.dataset.cleaned = 'true';
+          img.src = canvas.toDataURL('image/png');
+        }
+      } catch (err) {
+        console.warn('Не удалось обработать подпись:', err);
+      }
+    }
+
+    if (img.complete && (img.naturalWidth > 0 || img.width > 0)) {
+      process();
+    } else {
+      img.addEventListener('load', process, { once: true });
+    }
+  }
+
+  function cleanAllStampBackgrounds() {
+    const stamp = document.querySelector('.receipt-stamp');
+    const sign = document.querySelector('.receipt-sign');
+    if (stamp) cleanImageBlackBg(stamp);
+    if (sign) processSignature(sign);
+  }
+
+  // Логика перевода чисел в слова на русском
+  function tripletToWords(n, gender) {
+    const hundreds = ['', 'сто', 'двести', 'триста', 'четыреста', 'пятьсот', 'шестьсот', 'семьсот', 'восемьсот', 'девятьсот'];
+    const tens = ['', '', 'двадцать', 'тридцать', 'сорок', 'пятьдесят', 'шестьдесят', 'семьдесят', 'восемьдесят', 'девяносто'];
+    const teens = ['десять', 'одиннадцать', 'двенадцать', 'тринадцать', 'четырнадцать', 'пятнадцать', 'шестнадцать', 'семнадцать', 'восемнадцать', 'девятнадцать'];
+    const onesM = ['', 'один', 'два', 'три', 'четыре', 'пять', 'шесть', 'семь', 'восемь', 'девять'];
+    const onesF = ['', 'одна', 'две', 'три', 'четыре', 'пять', 'шесть', 'семь', 'восемь', 'девять'];
+
+    const ones = (gender === 'f') ? onesF : onesM;
+    let parts = [];
+
+    const h = Math.floor(n / 100);
+    const rem = n % 100;
+    const t = Math.floor(rem / 10);
+    const o = rem % 10;
+
+    if (h > 0) parts.push(hundreds[h]);
+    if (t === 1) {
+      parts.push(teens[o]);
+    } else {
+      if (t > 1) parts.push(tens[t]);
+      if (o > 0) parts.push(ones[o]);
+    }
+
+    return parts.join(' ');
+  }
+
+  function getPlural(n, forms) {
+    const n100 = Math.abs(n) % 100;
+    const n10 = n100 % 10;
+    if (n100 > 10 && n100 < 20) return forms[2];
+    if (n10 > 1 && n10 < 5) return forms[1];
+    if (n10 === 1) return forms[0];
+    return forms[2];
+  }
+
+  function amountToWordsRu(amount) {
+    const num = parseFloat(amount);
+    if (isNaN(num) || num < 0) return '';
+
+    const integerPart = Math.floor(num);
+    const kopecks = Math.round((num - integerPart) * 100);
+
+    if (integerPart === 0) {
+      const kopStr = String(kopecks).padStart(2, '0');
+      const kopNoun = getPlural(kopecks, ['копейка', 'копейки', 'копеек']);
+      return `Ноль рублей ${kopStr} ${kopNoun}`;
+    }
+
+    const units = [
+      { divider: 1000000000, gender: 'm', forms: ['миллиард', 'миллиарда', 'миллиардов'] },
+      { divider: 1000000,    gender: 'm', forms: ['миллион', 'миллиона', 'миллионов'] },
+      { divider: 1000,       gender: 'f', forms: ['тысяча', 'тысячи', 'тысяч'] },
+      { divider: 1,          gender: 'm', forms: ['рубль', 'рубля', 'рублей'] }
+    ];
+
+    let current = integerPart;
+    let resultWords = [];
+
+    for (const u of units) {
+      const chunk = Math.floor(current / u.divider);
+      if (chunk > 0) {
+        const text = tripletToWords(chunk, u.gender);
+        const noun = getPlural(chunk, u.forms);
+        resultWords.push(text + ' ' + noun);
+        current = current % u.divider;
+      }
+    }
+
+    let result = resultWords.join(' ').trim();
+    if (!result) result = 'ноль рублей';
+
+    result = result.charAt(0).toUpperCase() + result.slice(1);
+    const kopStr = String(kopecks).padStart(2, '0');
+    const kopNoun = getPlural(kopecks, ['копейка', 'копейки', 'копеек']);
+    return `${result} ${kopStr} ${kopNoun}`;
+  }
+
+  function formatAmountDigits(amount) {
+    const num = parseFloat(amount);
+    if (isNaN(num)) return '';
+    const integerPart = Math.floor(num);
+    const kopecks = Math.round((num - integerPart) * 100);
+    const formattedInt = integerPart.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+    const kopStr = String(kopecks).padStart(2, '0');
+    return `${formattedInt} руб. ${kopStr} коп.`;
+  }
+
+  function calculateAmountWords() {
+    const val = document.getElementById('in-calc-amount').value;
+    if (val === '') {
+      document.getElementById('in-digits-display').value = '';
+      document.getElementById('in-words-display').value = '';
+      syncToReceipt();
+      return;
+    }
+    document.getElementById('in-digits-display').value = formatAmountDigits(val);
+    document.getElementById('in-words-display').value = amountToWordsRu(val);
+    syncToReceipt();
+  }
+
+  function syncToReceipt() {
+    document.getElementById('out-org').innerText = document.getElementById('in-org').value || ' ';
+    document.getElementById('out-num').innerText = document.getElementById('in-num').value || '';
+    syncDateToReceipt();
+    document.getElementById('out-from').innerText = document.getElementById('in-from').value || '';
+    document.getElementById('out-reason').innerText = document.getElementById('in-reason').value || '';
+    document.getElementById('out-digits').innerText = document.getElementById('in-digits-display').value || '';
+    document.getElementById('out-words').innerText = document.getElementById('in-words-display').value || '';
+    document.getElementById('out-vat').innerText = document.getElementById('in-vat').value || '';
+    document.getElementById('out-accountant').innerText = document.getElementById('in-accountant').value || '';
+    document.getElementById('out-cashier').innerText = document.getElementById('in-cashier').value || '';
+  }
+
+  function syncDateToReceipt() {
+    const rawVal = document.getElementById('in-date').value;
+    if (!rawVal) {
+      document.getElementById('out-date').innerText = '';
+      return;
+    }
+    const months = [
+      'января', 'февраля', 'марта', 'апреля', 'мая', 'июня',
+      'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'
+    ];
+    const parts = rawVal.split('-');
+    if (parts.length === 3) {
+      const year = parts[0];
+      const monthIdx = parseInt(parts[1], 10) - 1;
+      const day = parseInt(parts[2], 10);
+      document.getElementById('out-date').innerText = `${day} ${months[monthIdx]} ${year} г.`;
+    }
+  }
+
+  function syncManualInputs() {
+    document.getElementById('out-digits').innerText = document.getElementById('in-digits-display').value || '';
+    document.getElementById('out-words').innerText = document.getElementById('in-words-display').value || '';
+  }
+
+  function saveAsPNG() {
+    const target = document.getElementById('receipt-target');
+    const orderNum = document.getElementById('in-num').value || 'ордер';
+
+    html2canvas(target, {
+      scale: 3,
+      backgroundColor: '#ffffff',
+      useCORS: true
+    }).then(canvas => {
+      const link = document.createElement('a');
+      link.download = `Квитанция_ПКО_${orderNum}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    }).catch(err => {
+      console.error('Ошибка сохранения:', err);
+    });
+  }
+
+  window.onload = function() {
+    // Устанавливаем дату в календаре по умолчанию (сегодняшнюю)
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const dd = String(today.getDate()).padStart(2, '0');
+    const dateInput = document.getElementById('in-date');
+    if (dateInput && !dateInput.value) {
+      dateInput.value = `${yyyy}-${mm}-${dd}`;
+    }
+
+    calculateAmountWords();
+    cleanAllStampBackgrounds();
+    syncToReceipt();
+  };
+  document.addEventListener('DOMContentLoaded', cleanAllStampBackgrounds);
+  setTimeout(cleanAllStampBackgrounds, 250);
+</script>
+
+</body>
+</html>
